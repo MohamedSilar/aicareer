@@ -62,7 +62,7 @@ const EvaluationView: React.FC<{ onSubmit: (answers: { [key: number]: string }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {currentQuestion.options.map((option, index) => (
                     <button key={index} onClick={() => handleAnswer(currentQuestion.id, option)}
-                        className={`text-left p-4 border-2 rounded-lg transition-colors duration-200 ${
+                        className={`text-left p-4 border-2 rounded-lg transition-colors duration-200 text-slate-800 ${
                             answers[currentQuestion.id] === option 
                             ? 'bg-sky-100 border-sky-500 text-sky-800' 
                             : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-400'

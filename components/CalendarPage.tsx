@@ -38,7 +38,7 @@ const TaskModal: React.FC<{
                             id="task-title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500"
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-slate-900"
                             placeholder="e.g., Complete React tutorial"
                         />
                     </div>
@@ -48,7 +48,7 @@ const TaskModal: React.FC<{
                             id="task-category"
                             value={category}
                             onChange={(e) => setCategory(e.target.value as Task['category'])}
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md text-slate-900"
                         >
                             <option>Learning</option>
                             <option>Work</option>

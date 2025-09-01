@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Chat } from "@google/genai";
 import type { EvaluationResult, DomainDetails, User } from '../types';
 
 // FIX: Initialize GoogleGenAI directly with the environment variable as per guidelines.
@@ -216,4 +216,16 @@ export async function getJobRecommendations(user: User): Promise<{ title: string
         console.error("Error fetching job recommendations:", error);
         throw new Error("Failed to generate job recommendations.");
     }
+}
+
+export function createChat(): Chat {
+    const systemInstruction = `You are an expert career guidance counselor for engineering students in India. You provide helpful, concise, and encouraging advice on career paths, learning resources, job applications, and skill development. When asked about resources, prefer well-known platforms like NPTEL, Coursera, GeeksforGeeks, etc. Keep your answers structured and easy to read. Use markdown for formatting like lists and bold text.`;
+
+    const chat = ai.chats.create({
+        model: 'gemini-2.5-flash',
+        config: {
+            systemInstruction: systemInstruction,
+        },
+    });
+    return chat;
 }

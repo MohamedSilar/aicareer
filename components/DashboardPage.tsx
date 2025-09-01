@@ -88,7 +88,7 @@ const DashboardPage: React.FC = () => {
     return (
         <div className="space-y-8">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-                <h1 className="text-3xl font-bold text-slate-800">Welcome back, {user.name.split(' ')[0]}!</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Welcome back, {user.name.split(' ')[0]}!</h1>
                 <p className="text-slate-600 mt-2">Let's continue your journey to find the perfect engineering career path.</p>
             </div>
 

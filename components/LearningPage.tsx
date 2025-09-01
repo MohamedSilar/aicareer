@@ -41,7 +41,7 @@ const LearningRoadmap: React.FC = () => {
             <h2 className="text-2xl font-bold text-slate-800">Generate Learning Roadmap</h2>
             <p className="text-slate-600 mt-1">Get a personalized, step-by-step learning path for any domain, powered by AI.</p>
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <select value={domain} onChange={(e) => setDomain(e.target.value)} className="flex-grow block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                <select value={domain} onChange={(e) => setDomain(e.target.value)} className="flex-grow block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md text-slate-900">
                     <option value="" disabled>Select a Domain</option>
                     {ENGINEERING_DOMAINS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
@@ -109,15 +109,17 @@ const DailyChallenge: React.FC = () => {
                 <ul className="space-y-2 text-sm">
                     {dailyQuestion.options.map((option, index) => {
                         const isSelected = selectedOption === index;
-                        let buttonClass = 'bg-slate-100 hover:bg-sky-100';
+                        let buttonClass = 'bg-slate-100 hover:bg-sky-100 text-slate-800';
                         if (isSubmitted) {
                             if (index === dailyQuestion.correctAnswerIndex) {
                                 buttonClass = 'bg-green-100 border-green-500 text-green-800';
                             } else if (isSelected) {
                                 buttonClass = 'bg-red-100 border-red-500 text-red-800';
+                            } else {
+                                buttonClass = 'bg-slate-100 text-slate-500';
                             }
                         } else if (isSelected) {
-                            buttonClass = 'bg-sky-100 border-sky-500';
+                            buttonClass = 'bg-sky-100 border-sky-500 text-sky-800';
                         }
                         return (
                             <li key={index}>

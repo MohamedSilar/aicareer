@@ -9,6 +9,16 @@ const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 };
 
+const useIsMobile = (breakpoint = 1024) => { // lg breakpoint
+    const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < breakpoint);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [breakpoint]);
+    return isMobile;
+};
+
 const JobRecommendations: React.FC = () => {
     const { user } = useAuth();
     const [recommendations, setRecommendations] = useState<{ title: string; company: string; reason: string }[]>([]);
@@ -70,7 +80,7 @@ const JobCard: React.FC<{ job: Job; onSelect: () => void; isSelected: boolean }>
     </button>
 );
 
-const JobDetail: React.FC<{ job: Job }> = ({ job }) => {
+const JobDetail: React.FC<{ job: Job; onBack?: () => void }> = ({ job, onBack }) => {
     const { user, updateUser } = useAuth();
     const hasApplied = user?.appliedJobs.includes(job.id);
     const hasSaved = user?.savedJobs.includes(job.id);
@@ -97,6 +107,12 @@ const JobDetail: React.FC<{ job: Job }> = ({ job }) => {
 
     return (
         <div className="p-6 bg-white rounded-2xl border border-slate-200 h-full overflow-y-auto">
+             {onBack && (
+                <button onClick={onBack} className="lg:hidden flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4 font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                    <span>Back to List</span>
+                </button>
+            )}
             <h2 className="text-2xl font-bold text-slate-800">{job.title}</h2>
             <p className="text-lg font-semibold text-sky-600 mt-1">{job.company}</p>
             <p className="text-sm text-slate-500 mt-1">{job.location}</p>
@@ -134,6 +150,7 @@ const JobsPage: React.FC = () => {
     const [selectedJob, setSelectedJob] = useState<Job | null>(null);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({ keyword: '', location: '', type: 'All', salary: '' });
+    const isMobile = useIsMobile();
 
     const loadJobs = useCallback(async () => {
         setLoading(true);
@@ -155,25 +172,25 @@ const JobsPage: React.FC = () => {
     };
 
     return (
-        <div className="h-[calc(100vh-10rem)] flex flex-col gap-6">
+        <div className="h-[calc(100vh-8rem)] flex flex-col gap-6">
             <JobRecommendations />
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <div className="md:col-span-2">
                         <label htmlFor="keyword" className="block text-sm font-medium text-slate-700">Keyword or Title</label>
-                        <input type="text" name="keyword" id="keyword" value={filters.keyword} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" placeholder="e.g., React Developer" />
+                        <input type="text" name="keyword" id="keyword" value={filters.keyword} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-slate-900" placeholder="e.g., React Developer" />
                     </div>
                     <div>
                         <label htmlFor="location" className="block text-sm font-medium text-slate-700">Location</label>
-                        <input type="text" name="location" id="location" value={filters.location} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" placeholder="e.g., Chennai" />
+                        <input type="text" name="location" id="location" value={filters.location} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-slate-900" placeholder="e.g., Chennai" />
                     </div>
                     <div>
                         <label htmlFor="salary" className="block text-sm font-medium text-slate-700">Salary / Stipend</label>
-                        <input type="text" name="salary" id="salary" value={filters.salary} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" placeholder="e.g., 10 LPA" />
+                        <input type="text" name="salary" id="salary" value={filters.salary} onChange={handleFilterChange} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 text-slate-900" placeholder="e.g., 10 LPA" />
                     </div>
                     <div>
                         <label htmlFor="type" className="block text-sm font-medium text-slate-700">Job Type</label>
-                         <select name="type" id="type" value={filters.type} onChange={handleFilterChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                         <select name="type" id="type" value={filters.type} onChange={handleFilterChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border border-slate-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md text-slate-900">
                             <option>All</option>
                             <option>Full-time</option>
                             <option>Internship</option>
@@ -183,29 +200,31 @@ const JobsPage: React.FC = () => {
                 </div>
             </div>
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
-                <div className="lg:col-span-1 bg-white p-4 rounded-2xl border border-slate-200 overflow-y-auto">
-                     {loading ? (
-                         <div className="text-center p-8">
-                             <p className="text-slate-600">Loading jobs...</p>
-                         </div>
-                     ) : jobs.length > 0 ? (
-                         <div className="space-y-3">
-                             {jobs.map(job => (
-                                 <JobCard key={job.id} job={job} onSelect={() => setSelectedJob(job)} isSelected={selectedJob?.id === job.id} />
-                             ))}
-                         </div>
-                     ) : (
-                          <div className="text-center p-8">
-                             <h3 className="font-semibold text-slate-700">No Jobs Found</h3>
-                             <p className="text-sm text-slate-500">Try adjusting your search filters.</p>
-                         </div>
-                     )}
+                <div className={`lg:col-span-1 h-full ${isMobile && selectedJob ? 'hidden' : 'block'}`}>
+                     <div className="bg-white p-4 rounded-2xl border border-slate-200 overflow-y-auto h-full">
+                        {loading ? (
+                            <div className="text-center p-8">
+                                <p className="text-slate-600">Loading jobs...</p>
+                            </div>
+                        ) : jobs.length > 0 ? (
+                            <div className="space-y-3">
+                                {jobs.map(job => (
+                                    <JobCard key={job.id} job={job} onSelect={() => setSelectedJob(job)} isSelected={selectedJob?.id === job.id} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center p-8">
+                                <h3 className="font-semibold text-slate-700">No Jobs Found</h3>
+                                <p className="text-sm text-slate-500">Try adjusting your search filters.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className="lg:col-span-2">
+                <div className={`lg:col-span-2 h-full ${isMobile && !selectedJob ? 'hidden' : 'block'}`}>
                     {selectedJob ? (
-                         <JobDetail job={selectedJob} />
+                         <JobDetail job={selectedJob} onBack={() => setSelectedJob(null)} />
                     ) : (
-                         <div className="flex items-center justify-center h-full bg-white rounded-2xl border border-slate-200">
+                         <div className="hidden lg:flex items-center justify-center h-full bg-white rounded-2xl border border-slate-200">
                              <div className="text-center">
                                  <h3 className="text-xl font-semibold text-slate-700">Select a job to see details</h3>
                                  <p className="text-slate-500 mt-1">Your next opportunity is one click away!</p>

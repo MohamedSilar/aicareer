@@ -2,6 +2,7 @@ export interface User {
   name: string;
   email: string;
   password?: string;
+  avatarUrl?: string;
   progress: number;
   badges: Badge[];
   appliedJobs: number[];
@@ -18,6 +19,21 @@ export interface User {
   streak: number;
   lastLoginDate: string | null;
   certificates: CertificateFile[];
+  // New comprehensive profile fields
+  aboutMe: string; // Will store HTML content from rich text editor
+  socialLinks: { id: string; platform: 'linkedin' | 'github' | 'twitter' | 'portfolio' | 'other'; url: string }[];
+  interests: string[];
+  hobbies: string[];
+  internships: Internship[];
+}
+
+export interface Internship {
+    id: string;
+    company: string;
+    role: string;
+    startDate: string;
+    endDate: string;
+    description: string;
 }
 
 export interface Achievement {
@@ -95,7 +111,6 @@ export interface DailyQuizChallenge {
     resourceText: string;
 }
 
-// FIX: Add Mentor interface for MentorshipPage
 export interface Mentor {
   id: number;
   name: string;
@@ -105,7 +120,6 @@ export interface Mentor {
   experience: string;
 }
 
-// FIX: Add ForumPost interface for constants and potentially ForumPage
 export interface ForumPost {
   id: number;
   title: string;
